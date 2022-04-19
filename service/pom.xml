@@ -17,9 +17,18 @@
 
     <dependencies>
 
+        <!--因为这里的服务 要用 common模块中的服务 因此引入 service_base 模块 -->
+        <dependency>
+            <groupId>com.yfh</groupId>
+            <artifactId>service_base</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
+        <!--要使用统一返回结果，引入common模块中的common_utils子模块-->
+        <!--因为依赖具有传递性，在service_base中引入了utils中 所以不需要再引入了-->
         <!--<dependency>-->
-        <!--    <groupId>com.atguigu</groupId>-->
-        <!--    <artifactId>service_base</artifactId>-->
+        <!--    <groupId>com.yfh</groupId>-->
+        <!--    <artifactId>common_utils</artifactId>-->
         <!--    <version>0.0.1-SNAPSHOT</version>-->
         <!--</dependency>-->
 
