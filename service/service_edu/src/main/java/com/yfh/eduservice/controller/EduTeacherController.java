@@ -7,10 +7,10 @@ import com.yfh.commonutils.R;
 import com.yfh.eduservice.entity.EduTeacher;
 import com.yfh.eduservice.entity.vo.TeacherQuery;
 import com.yfh.eduservice.service.EduTeacherService;
+import com.yfh.servicebase.exception.GuliException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.junit.experimental.theories.DataPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -74,7 +74,12 @@ public class EduTeacherController {
         /**
          * 模拟异常
          */
-        int i = 10/ 0;
+        try {
+            int i = 10/ 0;
+        } catch (Exception e) {
+            throw new GuliException(20001,"出现自定义异常");
+        }
+
 
         return R.ok().data("total", total).data("records", records);
     }
