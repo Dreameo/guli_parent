@@ -28,11 +28,10 @@ import java.util.List;
 @Api(description="讲师管理")
 @RestController
 @RequestMapping("/eduservice/teacher")
+@CrossOrigin // 解决跨域问题
 public class EduTeacherController {
     @Autowired
     private EduTeacherService eduTeacherService;
-
-
 
 
     // 查询所有教师
@@ -110,7 +109,7 @@ public class EduTeacherController {
         }
 
         if(!StringUtils.isEmpty(level)) {
-            queryWrapper.like("level", level);
+            queryWrapper.like("level", level); // 讲师头衔
         }
 
         if(!StringUtils.isEmpty(begin)) {
@@ -120,6 +119,9 @@ public class EduTeacherController {
         if(!StringUtils.isEmpty(end)) {
             queryWrapper.le("gmt_modified", end); // 字段名
         }
+
+        // 排序显示
+        queryWrapper.orderByDesc("gmt_create");
 
         // 2. 调用分页方法
         eduTeacherService.page(pageTeacher, queryWrapper);
