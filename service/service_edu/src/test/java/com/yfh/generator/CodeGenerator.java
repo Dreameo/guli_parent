@@ -27,7 +27,7 @@ public class CodeGenerator {
         GlobalConfig gc = new GlobalConfig();
         String projectPath = System.getProperty("user.dir");
 //        gc.setOutputDir(projectPath + "/src/main/java"); //当前项目路径,建议绝对路径 输出目录
-        gc.setOutputDir("E:\\Projects\\项目\\guli_parent\\service\\service_edu" + "/src/main/java"); //当前项目路径,建议绝对路径 输出目录
+        gc.setOutputDir("F:\\开发\\12项目\\guli_parent\\service\\service_edu" + "/src/main/java"); //当前项目路径,建议绝对路径 输出目录
 
 
         gc.setAuthor("testjava"); // 作者
@@ -44,10 +44,10 @@ public class CodeGenerator {
 
         // 3、数据源配置 单独配置数据库
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://192.168.136.9:3306/guli?serverTimezone=GMT%2B8");
+        dsc.setUrl("jdbc:mysql://localhost:3306/guli?serverTimezone=GMT%2B8");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
-        dsc.setUsername("zhangsan");
-        dsc.setPassword("123456");
+        dsc.setUsername("root");
+        dsc.setPassword("root");
         dsc.setDbType(DbType.MYSQL);
         mpg.setDataSource(dsc);
 
@@ -65,7 +65,8 @@ public class CodeGenerator {
 
         // 5、策略配置
         StrategyConfig strategy = new StrategyConfig();
-        strategy.setInclude("edu_subject"); // 表名称
+        strategy.setInclude("edu_chapter", "edu_comment", "edu_course", "edu_course_collect", "edu_course_description",
+                "edu_video"); // 表名称
         strategy.setNaming(NamingStrategy.underline_to_camel);//数据库表映射到实体的命名策略
         strategy.setTablePrefix(pc.getModuleName() + "_"); //生成实体时去掉表前缀
 

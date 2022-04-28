@@ -32,21 +32,23 @@ public class SubjectExcelListener extends AnalysisEventListener<SubjectData> {
         // 第一个值一级分类  第二个值二级分类
 
         // 判断一级分类是否重复
-        String pid = "";
-        if(!existOneSubject(data.getOneSubjectName(), subjectService)) { // 没有一级分类， 进行添加
-            EduSubject eduSubject = new EduSubject();
-            eduSubject.setTitle(data.getOneSubjectName());
-            eduSubject.setParentId("0"); // 根目录了
-            subjectService.save(eduSubject); // 添加一级分类
-            pid = eduSubject.getId();
+        EduSubject subjectOne = existOneSubject(data.getOneSubjectName(), subjectService);
+        if(subjectOne == null) { // 没有一级分类， 进行添加
+            subjectOne = new EduSubject();
+            subjectOne.setTitle(data.getOneSubjectName());
+            subjectOne.setParentId("0"); // 根目录了
+            subjectService.save(subjectOne); // 添加一级分类
         }
 
-        // 添加二级分类
-        if(!existTwoSubject(data.getTwoSubjectName(), subjectService, pid)) {
-            EduSubject eduSubject = new EduSubject();
-            eduSubject.setTitle(data.getTwoSubjectName());
-            eduSubject.setParentId(pid); // 输入进来的父目录
-            subjectService.save(eduSubject); // 添加二级分类
+        String pid = subjectOne.getId();
+        EduSubject subjectTwo = existTwoSubject(data.getTwoSubjectName(), subjectService, pid);
+
+        // 如果不存在二级分类  添加二级分类
+        if(subjectTwo == null) {
+            subjectTwo = new EduSubject();
+            subjectTwo.setTitle(data.getTwoSubjectName());
+            subjectTwo.setParentId(pid); // 输入进来的父目录
+            subjectService.save(subjectTwo); // 添加二级分类
         }
     }
 
@@ -62,22 +64,20 @@ public class SubjectExcelListener extends AnalysisEventListener<SubjectData> {
     }
 
     // 判断 是否重复添加一级分类
-    public boolean existOneSubject(String name, EduSubjectService subjectService) {
+    public EduSubject existOneSubject(String name, EduSubjectService subjectService) {
         QueryWrapper<EduSubject> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("title", name);
         queryWrapper.eq("parent_id", "0");
         EduSubject one = subjectService.getOne(queryWrapper);
-        if (one == null) return false;
-        return true;
+        return one;
     }
 
     // 判断 是否重复添加二级分类
-    public boolean existTwoSubject(String name, EduSubjectService subjectService, String pid) {
+    public EduSubject existTwoSubject(String name, EduSubjectService subjectService, String pid) {
         QueryWrapper<EduSubject> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("title", name);
         queryWrapper.eq("parent_id", pid);
         EduSubject two = subjectService.getOne(queryWrapper);
-        if (two == null) return false; // 如果查询为空， 那么不存在相同二级分类
-        return true;
+        return two;
     }
 }
