@@ -3,6 +3,7 @@ package com.yfh.eduservice.service.impl;
 import com.yfh.eduservice.entity.EduCourse;
 import com.yfh.eduservice.entity.EduCourseDescription;
 import com.yfh.eduservice.entity.vo.CourseInfoVo;
+import com.yfh.eduservice.entity.vo.CoursePublishVo;
 import com.yfh.eduservice.mapper.EduCourseMapper;
 import com.yfh.eduservice.service.EduCourseDescriptionService;
 import com.yfh.eduservice.service.EduCourseService;
@@ -25,6 +26,7 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
 
     @Autowired
     private EduCourseDescriptionService descriptionService;
+
 
     @Override
     public String saveCourseInfo(CourseInfoVo courseInfoVo) {
@@ -49,5 +51,52 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
         descriptionService.save(eduCourseDescription);
 
         return eduCourseId;
+    }
+
+    @Override
+    public CourseInfoVo getCourseById(String course_id) {
+
+        // 1. 根据id查询 课程信息
+        EduCourse eduCourse = baseMapper.selectById(course_id);
+
+        // 2. 根据id查询 课程简介信息
+        EduCourseDescription courseDescription = descriptionService.getById(course_id);
+
+        // 3. 将 课程信息和 简介信息 封装到 CourseVo对象中
+        CourseInfoVo courseInfoVo = new CourseInfoVo();
+        BeanUtils.copyProperties(eduCourse, courseInfoVo);
+
+        courseInfoVo.setDescription(courseDescription.getDescription());
+
+        return courseInfoVo;
+    }
+
+    @Override
+    public void updateCourseInfo(CourseInfoVo courseInfoVo) {
+        // 1. 修改课程表
+        EduCourse eduCourse = new EduCourse();
+        BeanUtils.copyProperties(courseInfoVo, eduCourse);
+
+        int update = baseMapper.updateById(eduCourse);
+
+        if(update == 0) {
+            throw new GuliException(20001, "课程修改失败");
+        }
+
+        // 2. 修改课程简介表
+        EduCourseDescription eduCourseDescription = new EduCourseDescription();
+        eduCourseDescription.setDescription(courseInfoVo.getDescription()); // 修改描述信息
+        eduCourseDescription.setId(courseInfoVo.getId());
+
+        // 更新操作
+        descriptionService.updateById(eduCourseDescription);
+
+
+    }
+
+    @Override
+    public CoursePublishVo getPublishCourseInfo(String id) {
+        CoursePublishVo publishCourseInfo = baseMapper.getPublishCourseInfo(id);
+        return publishCourseInfo;
     }
 }
