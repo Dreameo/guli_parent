@@ -28,6 +28,7 @@ import java.util.List;
 @CrossOrigin
 public class EduCourseController {
 
+    @Autowired
     private EduCourseService courseService;
 
     /**
@@ -87,12 +88,20 @@ public class EduCourseController {
         return R.ok();
     }
 
-
-    // 课程列表  基本实现
     // TODO 完善条件查询
+    // 课程列表  基本实现
+
+    @GetMapping("/getCourseList")
     public R getCourseList() {
         List<EduCourse> courseList = courseService.list(null);
         return R.ok().data("courseList", courseList);
+    }
+
+    // 根据id 删除课程信息
+    @DeleteMapping("/deleteCourseById/{course_id}")
+    public R deleteCourseById(@PathVariable String course_id) {
+        courseService.deleteCourseById(course_id);
+        return R.ok();
     }
 
 }

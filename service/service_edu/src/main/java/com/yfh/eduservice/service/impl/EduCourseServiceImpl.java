@@ -1,13 +1,18 @@
 package com.yfh.eduservice.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.yfh.eduservice.entity.EduChapter;
 import com.yfh.eduservice.entity.EduCourse;
 import com.yfh.eduservice.entity.EduCourseDescription;
+import com.yfh.eduservice.entity.EduVideo;
 import com.yfh.eduservice.entity.vo.CourseInfoVo;
 import com.yfh.eduservice.entity.vo.CoursePublishVo;
 import com.yfh.eduservice.mapper.EduCourseMapper;
+import com.yfh.eduservice.service.EduChapterService;
 import com.yfh.eduservice.service.EduCourseDescriptionService;
 import com.yfh.eduservice.service.EduCourseService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yfh.eduservice.service.EduVideoService;
 import com.yfh.servicebase.exception.GuliException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +31,14 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
 
     @Autowired
     private EduCourseDescriptionService descriptionService;
+
+    @Autowired
+    private EduVideoService videoService;
+
+    @Autowired
+    private EduChapterService chapterService;
+
+
 
 
     @Override
@@ -98,5 +111,24 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
     public CoursePublishVo getPublishCourseInfo(String id) {
         CoursePublishVo publishCourseInfo = baseMapper.getPublishCourseInfo(id);
         return publishCourseInfo;
+    }
+
+    @Override
+    public void deleteCourseById(String course_id) {
+        // TODO 删除小节对应的的视频
+        // 1. 删除 小节对应的视频
+
+        // 2. 删除小节
+        videoService.remove(new QueryWrapper<EduVideo>().eq("course_id", course_id));
+
+        // 3. 删除章节
+        chapterService.remove(new QueryWrapper<EduChapter>().eq("course_id", course_id));
+
+        // 4. 删除课程简介信息
+        descriptionService.removeById(course_id);
+
+        // 5. 删除课程信息
+        this.removeById(course_id);
+
     }
 }
