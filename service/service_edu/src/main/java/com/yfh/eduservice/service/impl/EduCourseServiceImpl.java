@@ -1,6 +1,7 @@
 package com.yfh.eduservice.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.yfh.eduservice.client.VodClient;
 import com.yfh.eduservice.entity.EduChapter;
 import com.yfh.eduservice.entity.EduCourse;
 import com.yfh.eduservice.entity.EduCourseDescription;
@@ -17,6 +18,9 @@ import com.yfh.servicebase.exception.GuliException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.util.List;
 
 /**
  * <p>
@@ -37,6 +41,9 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
 
     @Autowired
     private EduChapterService chapterService;
+
+    @Autowired
+    private VodClient vodClient;
 
 
 
@@ -118,8 +125,22 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
         // TODO 删除小节对应的的视频
         // 1. 删除 小节对应的视频
 
+        // 方法1：这是一种解决方案  循环删除
+//        List<EduVideo> eduVideoList = videoService.list(new QueryWrapper<EduVideo>().eq("course_id", course_id));
+//
+//        for (EduVideo eduVideo : eduVideoList) {
+//            String videoSourceId = eduVideo.getVideoSourceId();
+//            if(!StringUtils.isEmpty(videoSourceId)) {
+//                vodClient.deleteVideoById(videoSourceId);
+//            }
+//            videoService.removeById(eduVideo.getId());
+//        }
+
+        // 方法2：
+        videoService.removeCourseById(course_id);
+
         // 2. 删除小节
-        videoService.remove(new QueryWrapper<EduVideo>().eq("course_id", course_id));
+//        videoService.remove(new QueryWrapper<EduVideo>().eq("course_id", course_id));
 
         // 3. 删除章节
         chapterService.remove(new QueryWrapper<EduChapter>().eq("course_id", course_id));
