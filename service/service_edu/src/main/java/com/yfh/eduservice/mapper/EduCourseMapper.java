@@ -3,7 +3,6 @@ package com.yfh.eduservice.mapper;
 import com.yfh.eduservice.entity.EduCourse;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yfh.eduservice.entity.vo.CoursePublishVo;
-import org.apache.ibatis.annotations.Param;
 
 /**
  * <p>

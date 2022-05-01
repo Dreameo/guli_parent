@@ -5,7 +5,6 @@ import com.yfh.eduservice.client.VodClient;
 import com.yfh.eduservice.entity.EduChapter;
 import com.yfh.eduservice.entity.EduCourse;
 import com.yfh.eduservice.entity.EduCourseDescription;
-import com.yfh.eduservice.entity.EduVideo;
 import com.yfh.eduservice.entity.vo.CourseInfoVo;
 import com.yfh.eduservice.entity.vo.CoursePublishVo;
 import com.yfh.eduservice.mapper.EduCourseMapper;
@@ -18,9 +17,6 @@ import com.yfh.servicebase.exception.GuliException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
-import java.util.List;
 
 /**
  * <p>

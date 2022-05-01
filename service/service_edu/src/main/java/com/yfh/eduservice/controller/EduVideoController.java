@@ -1,7 +1,6 @@
 package com.yfh.eduservice.controller;
 
 
-import com.sun.media.jfxmediaimpl.MediaUtils;
 import com.yfh.commonutils.R;
 import com.yfh.eduservice.client.VodClient;
 import com.yfh.eduservice.entity.EduVideo;

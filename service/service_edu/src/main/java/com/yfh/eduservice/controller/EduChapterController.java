@@ -5,7 +5,6 @@ import com.yfh.commonutils.R;
 import com.yfh.eduservice.entity.EduChapter;
 import com.yfh.eduservice.entity.chapter.ChapterVo;
 import com.yfh.eduservice.service.EduChapterService;
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
