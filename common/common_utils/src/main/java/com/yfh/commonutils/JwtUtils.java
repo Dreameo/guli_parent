@@ -15,7 +15,7 @@ import java.util.Date;
 public class JwtUtils {
 
     public static final long EXPIRE = 1000 * 60 * 60 * 24; // 过期时间
-    public static final String APP_SECRET = "ukc8BDbRigUDaY6pZFfWus2jZWLPHO";
+    public static final String APP_SECRET = "ukc8BDbRigUDaY6pZFfWus2jZWLPHO"; // 密钥
 
     public static String getJwtToken(String id, String nickname){
 
@@ -25,9 +25,9 @@ public class JwtUtils {
                 .setSubject("guli-user")
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRE))
-                .claim("id", id)
-                .claim("nickname", nickname)
-                .signWith(SignatureAlgorithm.HS256, APP_SECRET)
+                .claim("id", id) // 主体部分
+                .claim("nickname", nickname) // 存储用户信息
+                .signWith(SignatureAlgorithm.HS256, APP_SECRET)  // 签名哈希
                 .compact();
 
         return JwtToken;
@@ -72,7 +72,11 @@ public class JwtUtils {
      * @return
      */
     public static String getMemberIdByJwtToken(HttpServletRequest request) {
+
+
+
         String jwtToken = request.getHeader("token");
+//        jwtToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJndWxpLXVzZXIiLCJpYXQiOjE2NTE0OTI5NDUsImV4cCI6MTY1MTU3OTM0NSwiaWQiOiIxNTIxMDY5OTMzOTU2NDMxODc0Iiwibmlja25hbWUiOiJ4aWFvbWluZyJ9.9QF1JuKULlf4xdagY1cGGFbZwgz7RJT9tr7wVWIIsQA";
         if(StringUtils.isEmpty(jwtToken)) return "";
         Jws<Claims> claimsJws = Jwts.parser().setSigningKey(APP_SECRET).parseClaimsJws(jwtToken);
         Claims claims = claimsJws.getBody();

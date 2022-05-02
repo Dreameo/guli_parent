@@ -6,6 +6,8 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 
+import java.util.HashMap;
+
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.yfh", "com.yfh.servicebase"}) // 因为项目要使用  本模块外的 组件， 因此要开启组件扫描  其他模块的包命名规则类似
 @EnableDiscoveryClient
@@ -13,5 +15,6 @@ import org.springframework.context.annotation.ComponentScan;
 public class EduApplication {
     public static void main(String[] args) {
         SpringApplication.run(EduApplication.class);
+//        new HashMap<>();
     }
 }
