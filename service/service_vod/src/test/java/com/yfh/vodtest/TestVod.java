@@ -60,7 +60,7 @@ public class TestVod {
         GetVideoPlayAuthResponse response = new GetVideoPlayAuthResponse();
 
         // 3. 向 request对象里面设置 视频id
-        request.setVideoId("9e5face24f264063ba4f35259e7933f8");
+        request.setVideoId("aa15d26999ab47ad9c971788ff88ddb8");
 
 
         // 4. 调用初始化对象的方法 得到凭证

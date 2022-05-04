@@ -18,4 +18,6 @@ public interface UcenterMemberService extends IService<UcenterMember> {
     String login(LoginVo loginVo);
 
     boolean register(RegisterVo registerVo);
+
+    UcenterMember getOpenIdMember(String openid);
 }

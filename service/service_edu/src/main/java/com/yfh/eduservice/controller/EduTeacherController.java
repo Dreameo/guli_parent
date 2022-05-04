@@ -16,6 +16,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * <p>
@@ -173,9 +174,6 @@ public class EduTeacherController {
 
         return R.error();
     }
-
-
-
 
 
 

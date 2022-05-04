@@ -1,12 +1,16 @@
 package com.yfh.eduservice.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yfh.eduservice.client.VodClient;
 import com.yfh.eduservice.entity.EduChapter;
 import com.yfh.eduservice.entity.EduCourse;
 import com.yfh.eduservice.entity.EduCourseDescription;
 import com.yfh.eduservice.entity.vo.CourseInfoVo;
 import com.yfh.eduservice.entity.vo.CoursePublishVo;
+import com.yfh.eduservice.entity.vo.frontvo.CourseQueryVo;
+import com.yfh.eduservice.entity.vo.frontvo.CourseWebVo;
 import com.yfh.eduservice.mapper.EduCourseMapper;
 import com.yfh.eduservice.service.EduChapterService;
 import com.yfh.eduservice.service.EduCourseDescriptionService;
@@ -17,6 +21,11 @@ import com.yfh.servicebase.exception.GuliException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -147,5 +156,81 @@ public class EduCourseServiceImpl extends ServiceImpl<EduCourseMapper, EduCourse
         // 5. 删除课程信息
         this.removeById(course_id);
 
+    }
+
+    @Override
+    public Map<String, Object> getCoursePageList(Page<EduCourse> pageParams, CourseQueryVo courseQueryVo) {
+        Map<String, Object> map = new HashMap<>();
+
+        if (courseQueryVo == null)
+            courseQueryVo = new CourseQueryVo();
+
+        QueryWrapper<EduCourse> wrapper = new QueryWrapper<>();
+
+//        wrapper.orderByDesc("gmt_modified");
+
+        // 1. 一级分类不为空
+        if(!StringUtils.isEmpty(courseQueryVo.getSubjectParentId())) {
+            wrapper.eq("subject_parent_id", courseQueryVo.getSubjectParentId());
+        }
+
+        // 2. 二级分类不为空
+        if(!StringUtils.isEmpty(courseQueryVo.getSubjectId())) {
+            wrapper.eq("subject_id", courseQueryVo.getSubjectId());
+        }
+
+        // 3. 是否根据价格排序
+        if(!StringUtils.isEmpty(courseQueryVo.getPriceSort())) {
+            wrapper.orderByAsc("price");
+        }
+
+        // 4. 是否根据最新时间排序
+        if(!StringUtils.isEmpty(courseQueryVo.getGmtCreateSort())) {
+            wrapper.orderByDesc("gmt_create");
+        }
+
+        // 5. 关注度排序buycount
+        if(!StringUtils.isEmpty(courseQueryVo.getBuyCountSort())) {
+            wrapper.orderByDesc("buy_count");
+        }
+
+
+        baseMapper.selectPage(pageParams, wrapper);
+
+        List<EduCourse> records = pageParams.getRecords();
+        long pages = pageParams.getPages();
+        long size = pageParams.getSize();
+        long current = pageParams.getCurrent();
+        long total = pageParams.getTotal();
+        boolean hasPrevious = pageParams.hasPrevious();
+        boolean hasNext = pageParams.hasNext();
+
+        map.put("pages", pages);
+        map.put("records", records);
+        map.put("size", size);
+        map.put("current", current);
+        map.put("total", total);
+        map.put("hasPrevious", hasPrevious);
+        map.put("hasNext", hasNext);
+
+        return map;
+    }
+
+    @Override
+    public CourseWebVo getCourseDetailById(String id) {
+        // 1. 编写sql语句 多表查询基本信息 然后再进行封装
+        CourseWebVo courseWebVo = baseMapper.getCourseWebDeatilById(id);
+
+        // 2. 点进详情页 就增加一次浏览数量
+        this.updateCourseViewCount(id);
+
+        return courseWebVo;
+    }
+
+    @Override
+    public void updateCourseViewCount(String id) {
+        EduCourse eduCourse = baseMapper.selectById(id);
+        eduCourse.setViewCount(eduCourse.getViewCount() + 1);
+        baseMapper.updateById(eduCourse);
     }
 }

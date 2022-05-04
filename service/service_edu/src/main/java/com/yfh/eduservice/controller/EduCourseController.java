@@ -51,6 +51,7 @@ public class EduCourseController {
 
         CourseInfoVo courseInfoVo = courseService.getCourseById(course_id);
 
+//        String imgUrl = "https://api.uomg.com/api/rand.img1?sort=美女&format=json";
 
         return R.ok().data("courseInfoVo", courseInfoVo);
     }

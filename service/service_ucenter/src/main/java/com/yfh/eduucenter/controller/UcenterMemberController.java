@@ -7,6 +7,8 @@ import com.yfh.eduucenter.entity.UcenterMember;
 import com.yfh.eduucenter.entity.vo.LoginVo;
 import com.yfh.eduucenter.entity.vo.RegisterVo;
 import com.yfh.eduucenter.service.UcenterMemberService;
+import com.yfh.ordervo.OrderUmemberVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,6 +66,18 @@ public class UcenterMemberController {
         UcenterMember member = ucenterMemberService.getById(id);
 
         return R.ok().data("member", member);
+    }
+
+    // 根据id获取 订单中 用户信息
+    @GetMapping("/getOrderMemberById/{user_id}")
+    public OrderUmemberVo getOrderMemberById(@PathVariable String user_id) {
+        UcenterMember ucenterMember = ucenterMemberService.getById(user_id);
+
+        OrderUmemberVo orderUmemberVo = new OrderUmemberVo();
+        BeanUtils.copyProperties(ucenterMember, orderUmemberVo);
+
+        return orderUmemberVo;
+
     }
 }
 
